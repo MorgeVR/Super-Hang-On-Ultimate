@@ -52,6 +52,7 @@ void lc_raw_key(int code);                     /* (Esc still goes to lc_key: it 
 /* png: the launcher picture (res/launcher_bg.png, 1920x1080), built into each program */
 void lc_begin(launcher_settings *s, launcher_rom_check_fn check, const unsigned char *png, size_t png_len);
 void lc_key(int key);
+int  lc_page(void);                         /* 0 = the settings, 1 = the controls screen */
 void lc_click(int cx, int cy);              /* canvas pixels (0..639, 0..359) */
 int  lc_folder_clicked(void);               /* 1 once after a click on the FOLDER line: open the game folder */
 void lc_tick(double now_seconds);           /* ROM re-checks, the blinking cursor; redraws the canvas */

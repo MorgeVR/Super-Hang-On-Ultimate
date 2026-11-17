@@ -574,3 +574,17 @@ Original Mode race: arcade stop commands (00,83,8e,92,9e,9f) no longer reach the
   throttle / brake; grip = turbo; A / B = select / back; X = coin; menu = start; Y = the F6 menu (left stick, B closes); left stick = menu directions.
 - Untested on hardware when written: compiled only.
 
+## Meta Quest standalone (Android, OpenXR on OpenGL ES)
+- `src/quest_main.c` + `quest/` (manifest, `build-quest.ps1`, instructions). A NativeActivity without Java code;
+  the Khronos OpenXR loader for Android (`libopenxr_loader.so` from the Maven AAR) and `libc++_shared.so` ride along.
+- Threads: main = headset frames (quad layers as on Windows; the picture is uploaded to a 3424 x 224 sRGB texture and
+  drawn enlarged into the swapchain image by a one-triangle shader), game = the machine by the clock, eye worker,
+  AAudio callback (ring buffer). Controllers and settings menus as in `win32_vr.c` / `win32_main.c`.
+- The recompiled CPUs' fibers use `rc_ctx.c` (`-DRC_ASM_FIBERS`): bionic has no makecontext/swapcontext.
+- Files: the app's external files folder (`/sdcard/Android/data/com.shangon.ultimate/files`): shangon.zip, optional
+  Mega Drive ROM (Original Mode is on by default when one is there), music/, shangon.ini, shangon.nv, shangon.log.
+- `XR_EXT_performance_settings` (CPU boost) and `XR_KHR_android_thread_settings` are used when the headset has them.
+- The build script compiles with the NDK's clang directly (no Gradle), packs with aapt2 + zipalign + apksigner (debug
+  key) and installs with adb. `src/overrides_all.c` = `cat recomp/overrides/*.c` and `src/gen` must exist (setup.py).
+- Written without a headset or the NDK at hand: every file compiles for aarch64-linux-android against bionic's headers,
+  but it has not been linked or run.

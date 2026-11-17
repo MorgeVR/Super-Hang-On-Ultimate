@@ -912,8 +912,12 @@ int sho_load_music(const char *directory, unsigned sample_rate, char *err, size_
 #include <stdarg.h>
 static FILE *diag_f;
 void sho_diag_open(const char *path) { if (diag_f) fclose(diag_f); diag_f = path ? fopen(path, "w") : NULL; }
+static FILE *diag_f2;      /* a second copy of the log, somewhere easier to reach (Quest: the Download folder) */
+void sho_diag_mirror(const char *path) { if (diag_f2) fclose(diag_f2); diag_f2 = path ? fopen(path, "w") : NULL; }
 void sho_diag(const char *fmt, ...) {
-    if (!diag_f) return;
-    va_list ap; va_start(ap, fmt); vfprintf(diag_f, fmt, ap); va_end(ap);
-    fputc('\n', diag_f); fflush(diag_f);
+    for (int k = 0; k < 2; k++) {
+        FILE *f = k ? diag_f2 : diag_f; if (!f) continue;
+        va_list ap; va_start(ap, fmt); vfprintf(f, fmt, ap); va_end(ap);
+        fputc('\n', f); fflush(f);
+    }
 }

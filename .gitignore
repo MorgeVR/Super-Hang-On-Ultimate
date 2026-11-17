@@ -43,6 +43,13 @@ source/toolchain/mingw-w64/
 *.app/
 *.dmg
 
+# Meta Quest build: downloaded tools, and the APK (it carries the ROMs and code made from them)
+*.apk
+quest/tools/
+quest/*.md
+quest/*.gen
+quest/*.smd
+
 # Installer working folders
 installer/windows/stage/
 installer/windows/cache/

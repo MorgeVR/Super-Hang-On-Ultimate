@@ -301,6 +301,7 @@ void lc_begin(launcher_settings *s, launcher_rom_check_fn check, const unsigned 
     free(img_cv); img_cv = NULL;
     draw();
 }
+int lc_page(void) { return page; }
 void lc_key(int k) {
     if (result != LC_RUNNING || loading) return;
     if (page == 1) { controls_key(k); draw(); return; }
